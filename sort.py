@@ -1,7 +1,7 @@
 from concurrent.futures import process
 import random
 import time
-from typing import List, Any, Optional
+from typing import List, Callable, Optional
 
 
 def in_order(numbers: List[int]) -> bool:
@@ -11,7 +11,7 @@ def in_order(numbers: List[int]) -> bool:
     #         return False
     # return True
 
-def test_sort_speed(sort_func: Any, numbers: List[int]) -> Optional[float]:
+def test_sort_speed(sort_func: Callable[[List[int]], List[int]], numbers: List[int]) -> Optional[float]:
     start = time.time()
     sorted_nums = sort_func(numbers)
     process_time = time.time() - start
@@ -78,6 +78,25 @@ def comb_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+def selection_sort(numbers: List[int]) -> List[int]:
+    len_numbers = len(numbers)
+    min_idx = 0
+    min_number = None
+    start = 0
+    while len_numbers != start:
+        min_number = numbers[start]
+        min_idx = start
+        for i in range(start, len_numbers - 1):
+            if numbers[i] < min_number:
+                min_number = numbers[i]
+                min_idx = i
+
+        if start != min_idx:
+            numbers[start], numbers[min_idx] = numbers[min_idx], numbers[start]
+
+        start += 1
+
+    return numbers
 
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
@@ -86,3 +105,4 @@ if __name__ == "__main__":
     print('bubble_sort:\n', test_sort_speed(bubble_sort, nums))
     print('cocktail_sort:\n', test_sort_speed(cocktail_sort, nums))
     print('comb_sort:\n', test_sort_speed(comb_sort, nums))
+    print('selection_sort:\n', test_sort_speed(selection_sort, nums))
