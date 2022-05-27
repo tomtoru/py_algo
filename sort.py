@@ -1,19 +1,16 @@
-from concurrent.futures import process
 import random
+import copy
 import time
 from typing import List, Callable, Optional
 
 
 def in_order(numbers: List[int]) -> bool:
     return all(numbers[i] <= numbers[i+1] for i in range(len(numbers) - 1))
-    # for i in range(len(numbers)-1):
-    #     if numbers[i] > numbers[i+1]:
-    #         return False
-    # return True
 
 def test_sort_speed(sort_func: Callable[[List[int]], List[int]], numbers: List[int]) -> Optional[float]:
+    test_list = copy.deepcopy(numbers)
     start = time.time()
-    sorted_nums = sort_func(numbers)
+    sorted_nums = sort_func(test_list)
     process_time = time.time() - start
     if in_order(sorted_nums):
         return process_time
@@ -29,7 +26,7 @@ def bubble_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
     for i in range(len_numbers):
         for j in range(len(numbers)-1-i):
-            if numbers[j] > numbers[j +1]:
+            if numbers[j] > numbers[j+1]:
                 numbers[j], numbers[j+1] = numbers[j+1], numbers[j]
     return numbers
 
@@ -45,8 +42,8 @@ def cocktail_sort(numbers: List[int]) -> List[int]:
                 numbers[i], numbers[i+1] = numbers[i+1], numbers[i]
                 swapped = True
 
-            if not swapped:
-                break
+        if not swapped:
+            break
 
         swapped = False
         end = end - 1
@@ -83,10 +80,10 @@ def selection_sort(numbers: List[int]) -> List[int]:
     min_idx = 0
     min_number = None
     start = 0
-    while len_numbers != start:
+    while start < len_numbers:
         min_number = numbers[start]
         min_idx = start
-        for i in range(start, len_numbers - 1):
+        for i in range(start, len_numbers):
             if numbers[i] < min_number:
                 min_number = numbers[i]
                 min_idx = i
@@ -98,11 +95,27 @@ def selection_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+def gnome_sort(numbers: List[int]) -> List[int]:
+    len_numbers = len(numbers)
+    idx = 0
+    while idx < len_numbers:
+        if idx == 0:
+            idx += 1
+
+        if numbers[idx-1] > numbers[idx]:
+            numbers[idx-1], numbers[idx] = numbers[idx], numbers[idx-1]
+            idx -= 1
+        else:
+            idx += 1
+
+    return numbers
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
-    # print('bogo_sort:', test_sort_speed(bogo_sort, nums))
+    # print('bogo_sort:\n', test_sort_speed(bogo_sort, nums))
     print('bubble_sort:\n', test_sort_speed(bubble_sort, nums))
     print('cocktail_sort:\n', test_sort_speed(cocktail_sort, nums))
     print('comb_sort:\n', test_sort_speed(comb_sort, nums))
     print('selection_sort:\n', test_sort_speed(selection_sort, nums))
+    print('gnome_sort:\n', test_sort_speed(gnome_sort, nums))
