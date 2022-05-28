@@ -110,6 +110,19 @@ def gnome_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+def insertion_sort(numbers: List[int]) -> List[int]:
+    len_numbers = len(numbers)
+    for i in range(1, len_numbers):
+        target_num = numbers[i]
+        check_idx = i - 1
+        while check_idx >= 0 and numbers[check_idx] > target_num:
+            numbers[check_idx+1] = numbers[check_idx]
+            check_idx -= 1
+
+        numbers[check_idx+1] = target_num
+
+    return numbers
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
@@ -119,3 +132,4 @@ if __name__ == "__main__":
     print('comb_sort:\n', test_sort_speed(comb_sort, nums))
     print('selection_sort:\n', test_sort_speed(selection_sort, nums))
     print('gnome_sort:\n', test_sort_speed(gnome_sort, nums))
+    print('insertion_sort:\n', test_sort_speed(insertion_sort, nums))
