@@ -123,6 +123,24 @@ def insertion_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+def bucket_sort(numbers: List[int], bucket_size: int = 10) -> List[int]:
+    buckets = [[] for _ in range(bucket_size)]
+    for num in numbers:
+        bucket_i = num // bucket_size
+        if bucket_i < bucket_size:
+            buckets[bucket_i].append(num)
+        else:
+            buckets[bucket_size-1].append(num)
+
+    for i in range(bucket_size):
+        insertion_sort(buckets[i])
+
+    result = []
+    for i in range(bucket_size):
+        result += buckets[i]
+
+    return result
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
@@ -133,3 +151,4 @@ if __name__ == "__main__":
     print('selection_sort:\n', test_sort_speed(selection_sort, nums))
     print('gnome_sort:\n', test_sort_speed(gnome_sort, nums))
     print('insertion_sort:\n', test_sort_speed(insertion_sort, nums))
+    print('bucket_sort:\n', test_sort_speed(bucket_sort, nums))
