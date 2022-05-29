@@ -123,9 +123,16 @@ def insertion_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
-def bucket_sort(numbers: List[int], bucket_size: int = 10) -> List[int]:
+def bucket_sort(numbers: List[int], bucket_size: int = 100) -> List[int]:
+    """
+    1. create any buckets
+    2. Assign numbers to each bucket according to the size of the number
+    3. sort by each bucket
+    4. merge buckets
+    """
     buckets = [[] for _ in range(bucket_size)]
     for num in numbers:
+        # HACK:: improvement to define bucket_i
         bucket_i = num // bucket_size
         if bucket_i < bucket_size:
             buckets[bucket_i].append(num)
@@ -141,6 +148,23 @@ def bucket_sort(numbers: List[int], bucket_size: int = 10) -> List[int]:
 
     return result
 
+def shell_sort(numbers: List[int]) -> List[int]:
+    len_numbers = len(numbers)
+    gap = len_numbers // 2
+    while gap > 0:
+        for i in range(gap, len_numbers):
+            tmp = numbers[i]
+            j = i
+            while j >= gap and numbers[j-gap] > tmp:
+                numbers[j] = numbers[j-gap]
+                j -= gap
+
+            numbers[j] = tmp
+
+        gap //=2
+
+    return numbers
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
@@ -152,3 +176,4 @@ if __name__ == "__main__":
     print('gnome_sort:\n', test_sort_speed(gnome_sort, nums))
     print('insertion_sort:\n', test_sort_speed(insertion_sort, nums))
     print('bucket_sort:\n', test_sort_speed(bucket_sort, nums))
+    print('shell_sort:\n', test_sort_speed(shell_sort, nums))
