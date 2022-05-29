@@ -165,6 +165,27 @@ def shell_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+def count_sort(numbers: List[int]) -> List[int]:
+    count_list = [0] * (max(numbers) + 1)
+    result = [0] * len(numbers)
+    # count appearances of number
+    for num in numbers:
+        count_list[num] += 1
+    # get index list
+    sum_count = 0
+    i = 0
+    for count in count_list:
+        sum_count += count
+        count_list[i] = sum_count
+        i += 1
+    # relocation
+    for num in numbers:
+        idx = count_list[num] - 1
+        count_list[num] = count_list[num] - 1
+        result[idx] = num
+
+    return result
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
@@ -177,3 +198,4 @@ if __name__ == "__main__":
     print('insertion_sort:\n', test_sort_speed(insertion_sort, nums))
     print('bucket_sort:\n', test_sort_speed(bucket_sort, nums))
     print('shell_sort:\n', test_sort_speed(shell_sort, nums))
+    print('count_sort:\n', test_sort_speed(count_sort, nums))
