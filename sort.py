@@ -171,7 +171,7 @@ def count_sort(numbers: List[int]) -> List[int]:
     # count appearances of number
     for num in numbers:
         count_list[num] += 1
-    # get index list
+    # get index list(calicuate cumulative number of appearances)
     sum_count = 0
     i = 0
     for count in count_list:
@@ -186,6 +186,39 @@ def count_sort(numbers: List[int]) -> List[int]:
 
     return result
 
+def count_sort_by_specified_digit(numbers: List[int], digit: int) -> List[int]:
+    count_list = [0] * 10
+    result = [0] * len(numbers)
+    for num in numbers:
+        idx = int(num / digit) % 10
+        count_list[idx] += 1
+
+    sum_count = 0
+    i = 0
+    for count in count_list:
+        sum_count += count
+        count_list[i] = sum_count
+        i += 1
+
+    for num in numbers[::-1]:
+        idx = int(num / digit) % 10
+        result[count_list[idx] - 1] = num
+        count_list[idx] -= 1
+
+    return result
+
+def radix_sort(numbers: List[int]) -> List[int]:
+    """
+    sort by digit
+    """
+    max_num = max(numbers)
+    digit = 1
+    while max_num >= digit:
+        numbers = count_sort_by_specified_digit(numbers, digit)
+        digit *= 10
+
+    return numbers
+
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
 
@@ -199,3 +232,4 @@ if __name__ == "__main__":
     print('bucket_sort:\n', test_sort_speed(bucket_sort, nums))
     print('shell_sort:\n', test_sort_speed(shell_sort, nums))
     print('count_sort:\n', test_sort_speed(count_sort, nums))
+    print('radix_sort:\n', test_sort_speed(radix_sort, nums))
