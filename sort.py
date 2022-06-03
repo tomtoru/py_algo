@@ -7,6 +7,7 @@ from typing import List, Callable, Optional
 def in_order(numbers: List[int]) -> bool:
     return all(numbers[i] <= numbers[i+1] for i in range(len(numbers) - 1))
 
+
 def test_sort_speed(sort_func: Callable[[List[int]], List[int]], numbers: List[int]) -> Optional[float]:
     test_list = copy.deepcopy(numbers)
     start = time.time()
@@ -17,10 +18,12 @@ def test_sort_speed(sort_func: Callable[[List[int]], List[int]], numbers: List[i
     else:
         return None
 
+
 def bogo_sort(numbers: List[int]) -> List[int]:
     while not in_order(numbers):
         random.shuffle(numbers)
     return numbers
+
 
 def bubble_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
@@ -29,6 +32,7 @@ def bubble_sort(numbers: List[int]) -> List[int]:
             if numbers[j] > numbers[j+1]:
                 numbers[j], numbers[j+1] = numbers[j+1], numbers[j]
     return numbers
+
 
 def cocktail_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
@@ -57,6 +61,7 @@ def cocktail_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+
 def comb_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
     gap = len_numbers
@@ -74,6 +79,7 @@ def comb_sort(numbers: List[int]) -> List[int]:
                 swapped = True
 
     return numbers
+
 
 def selection_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
@@ -95,6 +101,7 @@ def selection_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+
 def gnome_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
     idx = 0
@@ -110,6 +117,7 @@ def gnome_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+
 def insertion_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
     for i in range(1, len_numbers):
@@ -122,6 +130,7 @@ def insertion_sort(numbers: List[int]) -> List[int]:
         numbers[check_idx+1] = target_num
 
     return numbers
+
 
 def bucket_sort(numbers: List[int], bucket_size: int = 100) -> List[int]:
     """
@@ -148,6 +157,7 @@ def bucket_sort(numbers: List[int], bucket_size: int = 100) -> List[int]:
 
     return result
 
+
 def shell_sort(numbers: List[int]) -> List[int]:
     len_numbers = len(numbers)
     gap = len_numbers // 2
@@ -161,9 +171,10 @@ def shell_sort(numbers: List[int]) -> List[int]:
 
             numbers[j] = tmp
 
-        gap //=2
+        gap //= 2
 
     return numbers
+
 
 def count_sort(numbers: List[int]) -> List[int]:
     count_list = [0] * (max(numbers) + 1)
@@ -186,6 +197,7 @@ def count_sort(numbers: List[int]) -> List[int]:
 
     return result
 
+
 def count_sort_by_specified_digit(numbers: List[int], digit: int) -> List[int]:
     count_list = [0] * 10
     result = [0] * len(numbers)
@@ -207,6 +219,7 @@ def count_sort_by_specified_digit(numbers: List[int], digit: int) -> List[int]:
 
     return result
 
+
 def radix_sort(numbers: List[int]) -> List[int]:
     """
     sort by digit
@@ -219,6 +232,7 @@ def radix_sort(numbers: List[int]) -> List[int]:
 
     return numbers
 
+
 def partition(numbers: List[int], low: int, high: int) -> int:
     i = low - 1
     pivot = numbers[high]
@@ -229,6 +243,7 @@ def partition(numbers: List[int], low: int, high: int) -> int:
     numbers[i+1], numbers[high] = numbers[high], numbers[i+1]
     return i+1
 
+
 def quick_sort(numbers: List[int]) -> List[int]:
     def _quick_sort(numbers: List[int], low: int, high: int) -> None:
         if low < high:
@@ -238,6 +253,41 @@ def quick_sort(numbers: List[int]) -> List[int]:
 
     _quick_sort(numbers, 0, len(numbers)-1)
     return numbers
+
+
+def merge_sort(numbers: List[int]) -> List[int]:
+    if len(numbers) <= 1:
+        return numbers
+
+    center = len(numbers) // 2
+    left = numbers[:center]
+    right = numbers[center:]
+
+    merge_sort(left)
+    merge_sort(right)
+
+    i = j = k = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            numbers[k] = left[i]
+            i += 1
+        else:
+            numbers[k] = right[j]
+            j += 1
+        k += 1
+
+    while i < len(left):
+        numbers[k] = left[i]
+        i += 1
+        k += 1
+
+    while j < len(right):
+        numbers[k] = right[j]
+        j += 1
+        k += 1
+
+    return numbers
+
 
 if __name__ == "__main__":
     nums = [random.randint(0, 1000) for _ in range(1000)]
@@ -254,3 +304,4 @@ if __name__ == "__main__":
     print('count_sort:\n', test_sort_speed(count_sort, nums))
     print('radix_sort:\n', test_sort_speed(radix_sort, nums))
     print('quick_sort:\n', test_sort_speed(quick_sort, nums))
+    print('merge_sort:\n', test_sort_speed(merge_sort, nums))
